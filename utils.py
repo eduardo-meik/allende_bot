@@ -17,7 +17,7 @@ def find_match(input):
 
 def query_refiner(conversation, query):
     response = openai.Completion.create(
-    model="ada:ft-personal:refined-query-2023-07-05-21-38-35",
+    model="text-ada-001",
     prompt=f"Given the following user query and conversation log, formulate a long detailed question that would be the most relevant to provide the user with an answer from a knowledge base.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\n?Refined Query:",
     temperature=0.1,
     max_tokens=256,
