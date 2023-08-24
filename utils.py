@@ -2,11 +2,13 @@ from sentence_transformers import SentenceTransformer
 import pinecone
 import openai
 import streamlit as st
-openai.api_key = "ADD-OPENAI-KEY"
+import os
+
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
-pinecone.init(api_key='ADD-PINECONE-KEY', environment='asia-southeast1-gcp')
-index = pinecone.Index('langchain-chatbot')
+pinecone.init(api_key=st.secrets["PINECONE_API_KEY"], environment='us-west1-gcp-free')
+index = pinecone.Index('db1')
 
 def find_match(input):
     input_em = model.encode(input).tolist()
@@ -17,7 +19,7 @@ def query_refiner(conversation, query):
     response = openai.Completion.create(
     model="ada:ft-personal:refined-query-2023-07-05-21-38-35",
     prompt=f"Given the following user query and conversation log, formulate a long detailed question that would be the most relevant to provide the user with an answer from a knowledge base.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\n?Refined Query:",
-    temperature=0.7,
+    temperature=0.1,
     max_tokens=256,
     top_p=1,
     frequency_penalty=0,
