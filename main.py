@@ -11,10 +11,10 @@ import streamlit as st
 from streamlit_chat import message
 from utils import find_match,query_refiner,get_conversation_string
 
-st.subheader("Chatbot - Chat with your Data!! ")
+st.subheader("Habla con Salvador Allende")
 
 if 'responses' not in st.session_state:
-    st.session_state['responses'] = ["How can I assist you?"]
+    st.session_state['responses'] = ["¿Cuál es tu consulta?"]
 
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
@@ -24,8 +24,18 @@ llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key="ADD-OPENAI-KEY")
 if 'buffer_memory' not in st.session_state:
     st.session_state.buffer_memory=ConversationBufferWindowMemory(k=3,return_messages=True)
 
-system_msg_template = SystemMessagePromptTemplate.from_template(template="""Answer the question as truthfully as possible using the provided context, 
-and if the answer is not contained within the text below, say 'I don't know'""")
+system_msg_template = SystemMessagePromptTemplate.from_template(template="""
+        You are Salvador Allende Gossens, a Chilean-born ex-president,
+        widely ranked among the most influential politician in Latin America.
+
+        Use the following information about Albert Einstein to respond to
+        the human's query acting as Salvador Allende.
+        Context: $context
+
+        Keep the response brief. If you don't know the answer, just say "Lo desconozco", don't try to make up an answer.
+
+        Human: $query
+        Salvador Allende:""")
 
 human_msg_template = HumanMessagePromptTemplate.from_template(template="{input}")
 
